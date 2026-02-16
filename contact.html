@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Reda</title>
+    <link rel="stylesheet" href="css/contact.css">
+</head>
+<body>
+
+<div class="container">
+    <span class="badge">Me contacter</span>
+    <h1>On discute ?</h1>
+    <p>
+        Un projet ? Une question sur mon parcours BTS SIO ? 
+        Ou juste envie de parler tech ? Remplis ce formulaire 👇
+    </p>
+
+<form action="https://formsubmit.co/reda.elmourabit30@gmail.com" method="POST" class="contact-form">        
+        <input type="hidden" name="_subject" value="Nouveau message de ton Portfolio !">
+        <input type="hidden" name="_captcha" value="false"> <input type="hidden" name="_next" value="https://ton-site.com/merci.html"> <div class="form-group">
+            <label for="name">Ton Nom</label>
+            <input type="text" id="name" name="name" placeholder="Ex: Elon Musk" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Ton Email</label>
+            <input type="email" id="email" name="email" placeholder="elon@tesla.com" required>
+        </div>
+
+        <div class="form-group">
+            <label for="message">Ton Message</label>
+            <textarea id="message" name="message" rows="5" placeholder="Salut Reda, j'adore ton portfolio..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">Envoyer le message 🚀</button>
+    </form>
+
+    <div class="button-container">
+        <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
+    </div>
+</div>
+
+</body>
+</html>

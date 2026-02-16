@@ -1,0 +1,118 @@
+/* --- Variables et Reset --- */
+:root {
+    --primary: #6366f1;       /* Indigo vibrant */
+    --primary-hover: #4f46e5; /* Indigo plus sombre pour le survol */
+    --bg: #0f172a;            /* Fond sombre */
+    --text: #f8fafc;          /* Blanc cassé */
+    --secondary: #94a3b8;     /* Gris bleuté */
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* --- Le conteneur effet "Verre" --- */
+.container {
+    max-width: 800px;
+    padding: 40px;
+    margin: 20px; /* Pour éviter que ça colle aux bords sur mobile */
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Typographie (CORRIGÉ) --- */
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    
+    /* Le dégradé */
+    background: linear-gradient(to right, #818cf8, #c084fc);
+    
+    /* Les deux lignes obligatoires pour éviter l'erreur VS Code */
+    -webkit-background-clip: text;
+    background-clip: text;
+    
+    -webkit-text-fill-color: transparent;
+}
+
+p {
+    color: var(--secondary);
+    font-size: 1.1rem;
+}
+
+.highlight {
+    color: var(--text);
+    font-weight: 600;
+}
+
+/* --- Badge --- */
+.badge {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* --- Cartes Hobbies --- */
+.hobbies {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    flex-wrap: wrap; /* Pour que ça passe à la ligne sur mobile */
+}
+
+.hobby-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border-radius: 12px;
+    flex: 1;
+    min-width: 100px;
+    text-align: center;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    border: 1px solid transparent;
+    cursor: default;
+}
+
+.hobby-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+}
+
+/* --- Bouton Retour --- */
+.button-container {
+    margin-top: 40px;
+    text-align: left;
+}
+
+.btn-retour {
+    display: inline-block;
+    background-color: var(--primary);
+    color: white;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid transparent;
+}
+
+.btn-retour:hover {
+    background-color: var(--primary-hover);
+    transform: translateX(-5px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
