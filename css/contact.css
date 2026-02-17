@@ -17,7 +17,7 @@
 }
 
 body {
-    font-family: 'Inter', sans-serif; /* Changement majeur ici */
+    font-family: 'Inter', sans-serif;
     background-color: var(--bg);
     /* Fond "Nebula" amélioré */
     background-image: 
@@ -30,30 +30,31 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    padding-top: 80px; /* IMPORTANT: Pour ne pas être caché par le header fixe */
     box-sizing: border-box;
 }
 
 /* --- Le conteneur effet "Verre Premium" --- */
 .container {
     width: 100%;
-    max-width: 550px; /* Un peu plus compact pour l'élégance */
+    max-width: 550px;
     padding: 48px;
     background: var(--glass-bg);
     border-radius: 24px;
     
-    /* Le flou puissant */
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     
-    /* Bordures subtiles pour l'effet 3D */
     border: 1px solid var(--glass-border);
-    border-top: 1px solid var(--glass-highlight); /* Lumière qui vient du haut */
+    border-top: 1px solid var(--glass-highlight);
     
-    /* Ombre portée douce mais profonde */
     box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
     
-    animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1); /* Animation plus fluide */
+    animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    
+    /* Pour être sûr qu'il passe par dessus le fond mais sous le header */
+    position: relative; 
+    z-index: 1; 
 }
 
 @keyframes slideUp {
@@ -66,7 +67,7 @@ h1 {
     font-size: 2.2rem;
     font-weight: 700;
     margin: 0 0 12px 0;
-    letter-spacing: -0.02em; /* Kerning serré moderne */
+    letter-spacing: -0.02em;
     background: linear-gradient(135deg, #fff 30%, #a5b4fc 100%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -78,6 +79,18 @@ p {
     font-size: 1.05rem;
     margin-bottom: 40px;
     font-weight: 400;
+}
+
+.badge {
+    display: inline-block;
+    background: rgba(99, 102, 241, 0.2);
+    color: #a5b4fc;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    border: 1px solid rgba(99, 102, 241, 0.3);
 }
 
 /* --- Style du Formulaire --- */
@@ -98,18 +111,15 @@ label {
 }
 
 .form-group:focus-within label {
-    color: var(--primary); /* Le label s'allume quand on écrit */
+    color: var(--primary);
 }
 
 input, textarea {
     width: 100%;
     padding: 16px;
     border-radius: 12px;
-    
-    /* Fond plus sombre pour contraster avec le verre */
     background: rgba(0, 0, 0, 0.2); 
     border: 1px solid var(--glass-border);
-    
     color: var(--text);
     font-family: inherit;
     font-size: 1rem;
@@ -122,11 +132,10 @@ input::placeholder, textarea::placeholder {
     color: rgba(255, 255, 255, 0.2);
 }
 
-/* État Focus "Néon" */
 input:focus, textarea:focus {
     background: rgba(0, 0, 0, 0.4);
     border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); /* Halo autour */
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
 }
 
 textarea {
@@ -147,26 +156,31 @@ textarea {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    
-    /* Ombre interne pour effet de volume */
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    position: relative;
-    overflow: hidden;
 }
 
 .btn-submit:hover {
     transform: translateY(-2px);
-    /* Grosse lueur externe */
     box-shadow: 0 15px 30px -5px var(--primary-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-.btn-submit:active {
-    transform: translateY(0);
+.btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
 }
 
-/* --- Lien Retour --- */
+/* --- Feedback & Retour --- */
+#feedback {
+    margin-top: 25px;
+    font-weight: 600;
+    text-align: center;
+    min-height: 1.5em;
+    margin-bottom: 10px;
+}
+
 .button-container {
-    margin-top: 32px;
+    margin-top: 20px;
     text-align: center;
 }
 
@@ -176,16 +190,13 @@ textarea {
     font-size: 0.9rem;
     font-weight: 500;
     transition: color 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
 }
 
 .btn-retour:hover {
     color: #fff;
 }
 
-/* Responsive pour mobile */
+/* Responsive */
 @media (max-width: 600px) {
     .container {
         padding: 30px 20px;

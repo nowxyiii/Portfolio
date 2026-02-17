@@ -8,54 +8,82 @@
     <link rel="stylesheet" href="css/contact.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/mobile.css">
- 
 </head>
 <body>
 
-                <!-- Navbar -->
     <div id="header"></div>       
 
+    <main>
+        <div class="container">
+            <span class="badge">Contact</span>
+            <h1>On discute ?</h1>
+            <p>Un projet, une question ou juste pour dire bonjour. Je te réponds vite !</p>
 
-    <div class="container">
-        <span class="badge">Contact</span>
-        <h1>On discute ?</h1>
-        <p>Un projet, une question ou juste pour dire bonjour. Je te réponds vite !</p>
+            <form id="contact-form" class="contact-form">
+                
+                <div class="form-group">
+                    <label for="name">Ton Nom</label>
+                    <input type="text" id="name" required placeholder="Votre nom complet">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Ton Email</label>
+                    <input type="email" id="email" required placeholder="Example@gmail.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Ton Message</label>
+                    <textarea id="message" required placeholder="J'aimerais savoir..."></textarea>
+                </div>
 
-        <form id="contact-form" class="contact-form">
-            <div class="form-group">
-                <label for="name">Ton Nom</label>
-                <input type="text" id="name" required placeholder="Votre nom complet">
+                <div style="position: absolute; left: -9999px;">
+                    <label for="b_field">Ne pas remplir ce champ</label>
+                    <input type="text" id="b_field" name="b_field" tabindex="-1" autocomplete="off">
+                </div>
+
+                <button type="submit" class="btn-submit">Envoyer le message 🚀</button>
+            </form>
+
+            <p id="feedback"></p>
+
+            <div class="button-container">
+                <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
             </div>
-            <div class="form-group">
-                <label for="email">Ton Email</label>
-                <input type="email" id="email" required placeholder="Example@gmail.com">
-            </div>
-            <div class="form-group">
-                <label for="message">Ton Message</label>
-                <textarea id="message" required placeholder="...."></textarea>
-            </div>
-            <button type="submit" class="btn-submit">Envoyer le message 🚀</button>
-        </form>
-
-        <p id="feedback"></p>
-
-        <div class="button-container">
-            <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
         </div>
-    </div>
+    </main>
 
     <script>
         document.getElementById('contact-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            // --- 1. SÉCURITÉ : VÉRIFICATION ROBOT (Honeypot) ---
+            const trapField = document.getElementById('b_field').value;
+            if (trapField !== "") {
+                console.warn("Bot détecté et bloqué ! 🤖");
+                return; // On arrête tout, rien n'est envoyé.
+            }
+
+            // --- 2. SÉCURITÉ : ANTI-SPAM (Délai 60 secondes) ---
+            const lastSent = localStorage.getItem('lastEmailSent');
+            const now = Date.now();
+            if (lastSent && (now - lastSent) < 60000) { // 60 000 ms = 1 minute
+                const feedback = document.getElementById('feedback');
+                feedback.innerText = "Doucement ! Attends une minute avant de renvoyer un message. ⏳";
+                feedback.style.color = "#f59e0b"; // Orange
+                return;
+            }
+
+            // --- 3. ENVOI DU MESSAGE (Si tout est OK) ---
             const btn = document.querySelector('.btn-submit');
             const feedback = document.getElementById('feedback');
             const originalBtnText = btn.innerText;
             
+            // Effet de chargement
             btn.innerText = "Envoi en cours...";
             btn.disabled = true;
-            feedback.innerText = ""; // Reset feedback
+            feedback.innerText = ""; 
             
+            // Récupération des données
             const formData = {
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
@@ -63,6 +91,7 @@
             };
 
             try {
+                // Appel à ta fonction Vercel (Serverless)
                 const response = await fetch('/api/send-mail', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -70,22 +99,30 @@
                 });
 
                 if (response.ok) {
+                    // Succès
                     feedback.innerText = "Message envoyé avec succès ! Merci 🚀";
-                    feedback.style.color = "#4ade80";
-                    this.reset();
+                    feedback.style.color = "#4ade80"; // Vert
+                    
+                    // On enregistre l'heure pour l'anti-spam
+                    localStorage.setItem('lastEmailSent', Date.now());
+                    
+                    // On vide le formulaire
+                    document.getElementById('contact-form').reset();
                 } else {
                     throw new Error('Erreur API');
                 }
             } catch (error) {
                 console.error(error);
                 feedback.innerText = "Oups, une erreur est survenue. Réessaie plus tard.";
-                feedback.style.color = "#f87171";
+                feedback.style.color = "#f87171"; // Rouge
             } finally {
+                // On remet le bouton normal quoi qu'il arrive
                 btn.innerText = originalBtnText;
                 btn.disabled = false;
             }
         });
     </script>
-    <script src="java/header.js"></script>
+    
+    <script src="js/header.js"></script>
 </body>
 </html>
