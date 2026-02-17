@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/contact.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/mobile.css">
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 </head>
 <body>
 
@@ -33,7 +33,7 @@
                 <textarea id="message" required placeholder="...."></textarea>
             </div>
 
-            <div class="g-recaptcha" data-sitekey="6Lct424sAAAAAFRQuuubJsAHQ4WOuxDyMJaKnCIO" style="margin-bottom: 20px;"></div>
+            <div class="h-captcha" data-sitekey="1992e038-007c-4068-8cca-657e761ab5ca" style="margin-bottom: 20px;"></div>
 
             <button type="submit" class="btn-submit">Envoyer le message 🚀</button>
         </form>
@@ -46,55 +46,53 @@
     </div>
 
     <script>
-      document.getElementById('contact-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const feedback = document.getElementById('feedback');
-    // On récupère le jeton au moment précis du clic
-    const currentToken = grecaptcha.getResponse();
+        document.getElementById('contact-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const feedback = document.getElementById('feedback');
+            const currentToken = hcaptcha.getResponse();
 
-    if (!currentToken) {
-        feedback.innerText = "Veuillez valider le captcha.";
-        feedback.style.color = "#f87171";
-        return;
-    }
+            if (!currentToken) {
+                feedback.innerText = "Veuillez valider le captcha.";
+                feedback.style.color = "#f87171";
+                return;
+            }
 
-    const btn = document.querySelector('.btn-submit');
-    btn.innerText = "Envoi en cours...";
-    btn.disabled = true;
+            const btn = document.querySelector('.btn-submit');
+            btn.innerText = "Envoi en cours...";
+            btn.disabled = true;
 
-    try {
-        const response = await fetch('/api/send-mail', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                message: document.getElementById('message').value,
-                captchaToken: currentToken
-            })
+            try {
+                const response = await fetch('/api/send-mail', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: document.getElementById('name').value,
+                        email: document.getElementById('email').value,
+                        message: document.getElementById('message').value,
+                        captchaToken: currentToken
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    feedback.innerText = "Message envoyé ! 🚀";
+                    feedback.style.color = "#4ade80";
+                    this.reset();
+                    hcaptcha.reset();
+                } else {
+                    hcaptcha.reset();
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                feedback.innerText = "Erreur : " + error.message;
+                feedback.style.color = "#f87171";
+            } finally {
+                btn.innerText = "Envoyer le message 🚀";
+                btn.disabled = false;
+            }
         });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            feedback.innerText = "Message envoyé ! 🚀";
-            feedback.style.color = "#4ade80";
-            this.reset();
-            grecaptcha.reset(); // Très important pour pouvoir renvoyer un message
-        } else {
-            // Si Google dit que le token est invalide, on reset le captcha
-            grecaptcha.reset();
-            throw new Error(result.message);
-        }
-    } catch (error) {
-        feedback.innerText = "Erreur : " + error.message;
-        feedback.style.color = "#f87171";
-    } finally {
-        btn.innerText = "Envoyer le message 🚀";
-        btn.disabled = false;
-    }
-});
     </script>
     <script src="java/header.js"></script>
 </body>

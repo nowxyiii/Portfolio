@@ -11,28 +11,23 @@ export default async function handler(req, res) {
             return res.status(400).json({ message: "Champs manquants" });
         }
 
-        // DEBUG temporaire
-        console.log("Token reçu:", captchaToken?.slice(0, 20) + "...");
-        console.log("Secret key prefix:", process.env.RECAPTCHA_SECRET_KEY?.slice(0, 10) + "...");
+        // 1. Vérification avec hCaptcha
+        const verifyUrl = "https://hcaptcha.com/siteverify";
+        const secretKey = process.env.HCAPTCHA_SECRET_KEY;
 
-        // 1. Vérification avec Google
-        const verifyUrl = "https://www.google.com/recaptcha/api/siteverify";
-        const secretKey = process.env.RECAPTCHA_SECRET_KEY;
-
-        const googleResponse = await fetch(verifyUrl, {
+        const hCaptchaResponse = await fetch(verifyUrl, {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: `secret=${secretKey}&response=${captchaToken}`
         });
 
-        const googleData = await googleResponse.json();
-        console.log("Google response:", JSON.stringify(googleData));
+        const hCaptchaData = await hCaptchaResponse.json();
 
-        if (!googleData.success) {
-            console.error("Google Reject:", googleData);
+        if (!hCaptchaData.success) {
+            console.error("hCaptcha Reject:", hCaptchaData);
             return res.status(400).json({
                 message: "Vérification bot échouée.",
-                errors: googleData["error-codes"]
+                errors: hCaptchaData["error-codes"]
             });
         }
 
