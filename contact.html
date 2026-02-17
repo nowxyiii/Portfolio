@@ -1,99 +1,92 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact | Reda</title>
-    
-    <link rel="stylesheet" href="css/contact.css">
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/mobile.css">
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Reda</title>
+    
+    <link rel="stylesheet" href="css/contact.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/mobile.css">
+ 
 </head>
 <body>
 
-    <div id="header"></div>       
+                <!-- Navbar -->
+    <div id="header"></div>       
 
-    <div class="container">
-        <span class="badge">Contact</span>
-        <h1>On discute ?</h1>
-        <p>Un projet, une question ou juste pour dire bonjour. Je te réponds vite !</p>
 
-        <form id="contact-form" class="contact-form">
-            <div class="form-group">
-                <label for="name">Ton Nom</label>
-                <input type="text" id="name" required placeholder="Votre nom complet">
-            </div>
-            <div class="form-group">
-                <label for="email">Ton Email</label>
-                <input type="email" id="email" required placeholder="Example@gmail.com">
-            </div>
-            <div class="form-group">
-                <label for="message">Ton Message</label>
-                <textarea id="message" required placeholder="...."></textarea>
-            </div>
+    <div class="container">
+        <span class="badge">Contact</span>
+        <h1>On discute ?</h1>
+        <p>Un projet, une question ou juste pour dire bonjour. Je te réponds vite !</p>
 
-            <div class="h-captcha" data-sitekey="1992e038-007c-4068-8cca-657e761ab5ca" style="margin-bottom: 20px;"></div>
+        <form id="contact-form" class="contact-form">
+            <div class="form-group">
+                <label for="name">Ton Nom</label>
+                <input type="text" id="name" required placeholder="Votre nom complet">
+            </div>
+            <div class="form-group">
+                <label for="email">Ton Email</label>
+                <input type="email" id="email" required placeholder="Example@gmail.com">
+            </div>
+            <div class="form-group">
+                <label for="message">Ton Message</label>
+                <textarea id="message" required placeholder="...."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Envoyer le message 🚀</button>
+        </form>
 
-            <button type="submit" class="btn-submit">Envoyer le message 🚀</button>
-        </form>
+        <p id="feedback"></p>
 
-        <p id="feedback"></p>
+        <div class="button-container">
+            <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
+        </div>
+    </div>
 
-        <div class="button-container">
-            <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
-        </div>
-    </div>
+    <script>
+        document.getElementById('contact-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = document.querySelector('.btn-submit');
+            const feedback = document.getElementById('feedback');
+            const originalBtnText = btn.innerText;
+            
+            btn.innerText = "Envoi en cours...";
+            btn.disabled = true;
+            feedback.innerText = ""; // Reset feedback
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                message: document.getElementById('message').value
+            };
 
-    <script>
-        document.getElementById('contact-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const feedback = document.getElementById('feedback');
-            const currentToken = hcaptcha.getResponse();
+            try {
+                const response = await fetch('/api/send-mail', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
 
-            if (!currentToken) {
-                feedback.innerText = "Veuillez valider le captcha.";
-                feedback.style.color = "#f87171";
-                return;
-            }
-
-            const btn = document.querySelector('.btn-submit');
-            btn.innerText = "Envoi en cours...";
-            btn.disabled = true;
-
-            try {
-                const response = await fetch('/api/send-mail', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: document.getElementById('name').value,
-                        email: document.getElementById('email').value,
-                        message: document.getElementById('message').value,
-                        captchaToken: currentToken
-                    })
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    feedback.innerText = "Message envoyé ! 🚀";
-                    feedback.style.color = "#4ade80";
-                    this.reset();
-                    hcaptcha.reset();
-                } else {
-                    hcaptcha.reset();
-                    throw new Error(result.message);
-                }
-            } catch (error) {
-                feedback.innerText = "Erreur : " + error.message;
-                feedback.style.color = "#f87171";
-            } finally {
-                btn.innerText = "Envoyer le message 🚀";
-                btn.disabled = false;
-            }
-        });
-    </script>
-    <script src="java/header.js"></script>
+                if (response.ok) {
+                    feedback.innerText = "Message envoyé avec succès ! Merci 🚀";
+                    feedback.style.color = "#4ade80";
+                    this.reset();
+                } else {
+                    throw new Error('Erreur API');
+                }
+            } catch (error) {
+                console.error(error);
+                feedback.innerText = "Oups, une erreur est survenue. Réessaie plus tard.";
+                feedback.style.color = "#f87171";
+            } finally {
+                btn.innerText = originalBtnText;
+                btn.disabled = false;
+            }
+        });
+    </script>
+    <script src="java/header.js"></script>
 </body>
 </html>
+

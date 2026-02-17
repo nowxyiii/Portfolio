@@ -1,58 +1,50 @@
+
+
 export default async function handler(req, res) {
-    if (req.method !== "POST") {
-        return res.status(405).json({ message: "Méthode non autorisée" });
-    }
+    // Autoriser uniquement POST
+    if (req.method !== "POST") {
+        return res.status(405).json({ message: "Method Not Allowed" });
+    }
 
-    try {
-        const { name, email, message, captchaToken } = req.body;
+    try {
+        const { name, email, message } = req.body;
 
-        // Validation des champs
-        if (!name || !email || !message || !captchaToken) {
-            return res.status(400).json({ message: "Champs manquants" });
-        }
+        // Vérification simple
+        if (!name || !email || !message) {
+            return res.status(400).json({ message: "Tous les champs sont requis." });
+        }
 
-        // 1. Vérification avec hCaptcha
-        const verifyUrl = "https://hcaptcha.com/siteverify";
-        const secretKey = process.env.HCAPTCHA_SECRET_KEY;
+        const data = {
+            service_id: "service_ugl1bfb",
+            template_id: "template_xq98p7r",
+            user_id: "4PhUYs4uuntp8NH0J", // PUBLIC KEY
+            accessToken: process.env.EMAILJS_PRIVATE_KEY, // PRIVATE KEY (env var)
+            template_params: {
+                name,
+                email,
+                message,
+                title: "Portfolio Contact"
+            }
+        };
 
-        const hCaptchaResponse = await fetch(verifyUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: `secret=${secretKey}&response=${captchaToken}`
-        });
+        const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
 
-        const hCaptchaData = await hCaptchaResponse.json();
+        if (response.ok) {
+            return res.status(200).json({ message: "Email envoyé avec succès !" });
+        } else {
+            const errorText = await response.text();
+            console.error("ERREUR EMAILJS:", errorText);
+            return res.status(500).json({ message: "Erreur EmailJS", error: errorText });
+        }
 
-        if (!hCaptchaData.success) {
-            console.error("hCaptcha Reject:", hCaptchaData);
-            return res.status(400).json({
-                message: "Vérification bot échouée.",
-                errors: hCaptchaData["error-codes"]
-            });
-        }
-
-        // 2. Envoi vers EmailJS
-        const emailjsResponse = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                service_id: "service_ugl1bfb",
-                template_id: "template_xq98p7r",
-                publicKey: "4PhUYs4uuntp8NH0J",
-                accessToken: process.env.EMAILJS_PRIVATE_KEY,
-                template_params: { name, email, message }
-            })
-        });
-
-        if (emailjsResponse.ok) {
-            return res.status(200).json({ message: "Succès" });
-        } else {
-            const errText = await emailjsResponse.text();
-            return res.status(500).json({ message: "Erreur EmailJS", details: errText });
-        }
-
-    } catch (error) {
-        console.error("Erreur inattendue:", error);
-        return res.status(500).json({ message: "Erreur serveur" });
-    }
+    } catch (error) {
+        console.error("ERREUR SERVEUR:", error);
+        return res.status(500).json({ message: "Erreur serveur", error: error.message });
+    }
 }
