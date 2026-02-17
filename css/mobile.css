@@ -60,7 +60,7 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(15, 23, 42, 0.8); /* Fond sombre semi-transparent */
+    background: rgba(0, 0, 0, 0.8); /* Fond sombre semi-transparent */
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--glass-border);
     z-index: 1000;
@@ -211,27 +211,66 @@ textarea {
 
 /* 9. MOBILE (Responsive) */
 @media (max-width: 768px) {
+
+    /* --- NAVBAR --- */
     .navbar {
-        flex-direction: column;
-        padding: 15px;
-        background: rgba(15, 23, 42, 0.95); /* Plus opaque sur mobile */
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 10px 15px;
+        background: rgba(15, 23, 42, 0.97);
+        gap: 0;
     }
-    
+
+    .navbar h1 {
+        font-size: 0.95rem;
+        flex: 1;
+        margin: 0;
+        white-space: nowrap;
+    }
+
     .navbar ul {
-        margin-top: 15px;
-        gap: 15px;
+        display: flex;
         flex-wrap: wrap;
         justify-content: center;
+        gap: 4px 12px;
+        margin: 6px 0 0 0;
+        padding: 0;
+        width: 100%;
     }
 
-    main {
-        padding-top: 140px; /* Plus d'espace car le menu est plus haut */
+    .navbar li a {
+        font-size: 0.8rem;
     }
 
-    .glass-card {
-        padding: 30px 20px;
-        width: 90%;
+    /* --- MAIN CONTENT --- */
+    /* Compense la hauteur de la navbar sur toutes les pages */
+    main,
+    main.main-content {
+        padding-top: 120px !important;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 20px;
     }
 
-    h1 { font-size: 1.8rem; }
+    /* Pour les pages sans class="main-content" (contact, cv...) */
+    .container,
+    .cv-intro {
+        margin-top: 120px;
+    }
+
+    /* --- CARTES --- */
+    .glass-card,
+    .center-rectangle {
+        padding: 25px 18px;
+        width: 92%;
+        border-radius: 18px;
+    }
+
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.3rem; }
+
+    .btn {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+    }
 }
