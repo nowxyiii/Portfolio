@@ -46,60 +46,55 @@
     </div>
 
     <script>
-        document.getElementById('contact-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const btn = document.querySelector('.btn-submit');
-            const feedback = document.getElementById('feedback');
-            const originalBtnText = btn.innerText;
-            
-            // 1. Vérifier si le captcha est rempli
-            const captchaToken = grecaptcha.getResponse();
-            if (!captchaToken) {
-                feedback.innerText = "Veuillez cocher la case 'Je ne suis pas un robot'.";
-                feedback.style.color = "#f87171";
-                return;
-            }
+      document.getElementById('contact-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const feedback = document.getElementById('feedback');
+    // On récupère le jeton au moment précis du clic
+    const currentToken = grecaptcha.getResponse();
 
-            btn.innerText = "Envoi en cours...";
-            btn.disabled = true;
-            feedback.innerText = ""; 
-            
-            const formData = {
+    if (!currentToken) {
+        feedback.innerText = "Veuillez valider le captcha.";
+        feedback.style.color = "#f87171";
+        return;
+    }
+
+    const btn = document.querySelector('.btn-submit');
+    btn.innerText = "Envoi en cours...";
+    btn.disabled = true;
+
+    try {
+        const response = await fetch('/api/send-mail', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
                 message: document.getElementById('message').value,
-                captchaToken: captchaToken // On envoie le token au backend
-            };
-
-            try {
-                const response = await fetch('/api/send-mail', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    feedback.innerText = "Message envoyé avec succès ! Merci 🚀";
-                    feedback.style.color = "#4ade80";
-                    this.reset();
-                    grecaptcha.reset(); // Réinitialise le captcha
-                } else {
-                    throw new Error(result.message || 'Erreur API');
-                }
-            } catch (error) {
-                console.error(error);
-                feedback.innerText = error.message === "Échec de la vérification bot." 
-                    ? "Vérification bot échouée. Réessaie." 
-                    : "Oups, une erreur est survenue. Réessaie plus tard.";
-                feedback.style.color = "#f87171";
-            } finally {
-                btn.innerText = originalBtnText;
-                btn.disabled = false;
-            }
+                captchaToken: currentToken
+            })
         });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            feedback.innerText = "Message envoyé ! 🚀";
+            feedback.style.color = "#4ade80";
+            this.reset();
+            grecaptcha.reset(); // Très important pour pouvoir renvoyer un message
+        } else {
+            // Si Google dit que le token est invalide, on reset le captcha
+            grecaptcha.reset();
+            throw new Error(result.message);
+        }
+    } catch (error) {
+        feedback.innerText = "Erreur : " + error.message;
+        feedback.style.color = "#f87171";
+    } finally {
+        btn.innerText = "Envoyer le message 🚀";
+        btn.disabled = false;
+    }
+});
     </script>
     <script src="java/header.js"></script>
 </body>
