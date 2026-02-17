@@ -3,42 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>À propos | Reda</title>
-    <link rel="stylesheet" href="css/about_me.css">
+    <title>À propos | Reda El Mourabit</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/header.css">
 </head>
 <body>
 
-<div class="container">
-    <span class="badge">Étudiant Passionné</span>
-    <h1>Moi, c'est Reda.</h1>
-    <p>
-        J'ai <span class="highlight">18 ans</span> et je suis actuellement en <span class="highlight">BTS SIO</span> (Services Informatiques aux Organisations). 
-        Depuis toujours, je suis fasciné par la manière dont les choses fonctionnent "sous le capot".
-    </p>
-    
-    <p>
-        Mon quotidien ? Transformer des lignes de code en solutions concrètes et explorer les infrastructures réseaux. 
-        Quand je ne suis pas en train de coder ou de réviser mes cours, je plonge dans l'univers du jeu vidéo, 
-        une passion qui a nourri ma curiosité pour l'informatique dès le début.
-    </p>
+        <div id="header"></div>
+    <main>
+        <div class="glass-card text-left" style="max-width: 700px;">
+            
+            <span class="badge">BTS SIO • Futur Expert IT</span>
+            
+            <h1>Plus qu'un étudiant,<br>un passionné en action.</h1>
+            
+            <p>
+                Bonjour, je suis <strong>Reda El Mourabit</strong>. Actuellement étudiant en <strong>BTS SIO</strong> (Services Informatiques aux Organisations), je ne me contente pas d'apprendre la théorie : je la mets en pratique.
+            </p>
+            
+            <p>
+                Mon parcours a commencé par une simple curiosité pour le fonctionnement des jeux vidéo, qui s'est vite transformée en une véritable vocation pour le <strong>développement web</strong>. 
+            </p>
 
-    <div class="hobbies">
-        <div class="hobby-card">
-            🎮 <br> <strong>Gaming</strong>
-        </div>
-        <div class="hobby-card">
-            💻 <br> <strong>Tech</strong>
-        </div>
-        <div class="hobby-card">
-            🚀 <br> <strong>Innovation</strong>
-        </div>
-    </div>
+            <p>
+                Aujourd'hui, mon objectif est clair : concevoir des solutions numériques performantes, sécurisées et intuitives. Je suis constamment en veille technologique pour affiner mes compétences.
+            </p>
 
-    <div class="button-container">
-        <a href="index.html" class="btn-retour">← Retour à l'accueil</a>
-    </div>
-</div>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <span class="icon">💡</span>
+                    <h3>Curiosité</h3>
+                    <p>Toujours prêt à apprendre une nouvelle techno.</p>
+                </div>
+                <div class="skill-item">
+                    <span class="icon">🎯</span>
+                    <h3>Rigueur</h3>
+                    <p>Un code propre pour des projets durables.</p>
+                </div>
+                <div class="skill-item">
+                    <span class="icon">🚀</span>
+                    <h3>Ambition</h3>
+                    <p>Chaque projet est une chance de se dépasser.</p>
+                </div>
+            </div>
 
+            <div class="button-group" style="margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
+                <a href="index.html" class="btn">Retour à l'accueil</a>
+                <a href="contact.html" class="btn" style="background: transparent; border: 1px solid var(--primary);">Me contacter</a>
+            </div>
+            
+        </div>
+    </main>
+
+    <script src="java/header.js"></script>
 </body>
 </html>

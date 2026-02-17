@@ -1,17 +1,19 @@
-/* ----------- Navbar ----------- */
+/* css/header.css */
 .navbar {
-    background: rgba(0, 0, 0, 0.3); 
+    position: fixed; /* Sort le header du centrage Flexbox */
+    top: 0;
+    left: 0;
+    width: 100%; /* Obligatoire pour prendre toute la largeur */
+    
+   background: rgba(0, 0, 0, 0.3); 
     backdrop-filter: blur(10px);
     padding: 1rem 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    opacity: 0.95;
-
+    z-index: 1000; /* Pour qu'il passe au-dessus du reste */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-sizing: border-box; /* Pour que le padding ne dépasse pas */
 }
 
 .navbar h1 {

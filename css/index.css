@@ -32,9 +32,10 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    object-position: center;
     z-index: -1; /* Derrière tout le contenu */
 }
 
@@ -109,41 +110,49 @@ main.main-content {
     transform: scale(1.05); /* Zoom léger au survol */
 }
 
-/* ----------- Liens ----------- */
-/* Je suppose que c'est pour ta nav à l'intérieur de la carte */
-.links {
-    margin-bottom: 25px;
-}
-
-.links a, .redict {
+/* ----------- Liens (Menu dans la carte) ----------- */
+/* On cible tous les liens DANS la carte, SAUF le bouton 'btn-download' */
+.center-rectangle a:not(.btn-download) {
     display: inline-block;
-    margin: 0 8px;
-    color: var(--text);
+    margin: 0 10px;
+    color: var(--text); /* Force le BLANC par défaut */
     text-decoration: none;
     font-weight: 600;
     font-size: 0.95rem;
-    transition: color 0.3s;
+    transition: color 0.3s ease;
     position: relative;
 }
 
-/* Petit effet de soulignement animé */
-.links a::after {
+/* Force la couleur blanche même si le lien a déjà été cliqué (Visité) */
+.center-rectangle a:visited:not(.btn-download) {
+    color: var(--text) !important;
+    -webkit-text-fill-color: var(--text);
+}
+
+/* Au survol (Hover), ça devient indigo — même si le lien est déjà visité */
+.center-rectangle a:hover:not(.btn-download),
+.center-rectangle a:visited:hover:not(.btn-download) {
+    color: var(--primary) !important;
+    -webkit-text-fill-color: var(--primary);
+    cursor: pointer;
+}
+
+/* L'animation de soulignement (Le petit trait bleu) */
+.center-rectangle a:not(.btn-download)::after {
     content: '';
     display: block;
     width: 0;
     height: 2px;
-    background: var(--primary);
-    transition: width 0.3s;
+    background: var(--primary); /* Couleur du trait */
+    transition: width 0.3s ease;
+    position: absolute;
+    bottom: -2px;
+    left: 0;
 }
 
-.links a:hover::after {
-    width: 100%;
+.center-rectangle a:hover:not(.btn-download)::after {
+    width: 100%; /* Le trait s'agrandit au survol */
 }
-
-.links a:hover {
-    color: var(--primary);
-}
-
 /* ----------- Bouton Télécharger ----------- */
 .btn-download {
     display: inline-block;
