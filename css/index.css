@@ -1,16 +1,33 @@
+/* ----------- Import de la police "Inter" ----------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
-/* ----------- Style global ----------- */
+/* ----------- Variables (Thème Indigo/Espace) ----------- */
+:root {
+    --primary: #6366f1;         /* Indigo vibrant */
+    --primary-hover: #4f46e5;   /* Indigo plus sombre */
+    --text: #f8fafc;            /* Blanc cassé */
+    --text-muted: #cbd5e1;      /* Gris clair pour les paragraphes */
+    
+    /* Effet Verre */
+    --glass-bg: rgba(20, 20, 30, 0.6); /* Fond sombre semi-transparent */
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-blur: blur(20px);
+}
+
+/* ----------- Style Global ----------- */
 body {
     position: relative;
     min-height: 100vh;
     margin: 0;
     padding: 0;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    color: #222;
-    z-index: 1;
+    font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+    color: var(--text);
+    /* On garde un fond sombre par défaut au cas où l'image ne charge pas */
+    background-color: #0f172a; 
+    overflow-x: hidden; /* Évite le scroll horizontal sur mobile */
 }
 
-/* Image de fond */
+/* Image de fond (Conservée) */
 .background-img {
     position: fixed;
     top: 0;
@@ -18,113 +35,154 @@ body {
     width: 100vw;
     height: 100vh;
     object-fit: cover;
-    z-index: 0;
-    pointer-events: none;  
+    z-index: -1; /* Derrière tout le contenu */
 }
 
-
-/* ----------- Bloc central ----------- */
-.center-rectangle {
-    width: 350px;
-    padding: 30px;
-    background: rgba(245, 245, 245, 0.95);
-    border-radius: 20px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-    margin: 100px auto;
-    text-align: center;
-    backdrop-filter: blur(6px);
-    border: 2px solid transparent;
-    opacity: 0.95;
-}
-
-.center-rectangle {
-    background: rgba(255, 255, 255, 0.15); /* plus translucide */
-    border: 2px solid rgba(0, 170, 255, 0.3); /* contour bleu léger */
-    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-    backdrop-filter: blur(10px); /* un peu plus flou */
-}
-
+/* ----------- Mise en page principale ----------- */
 main.main-content {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 80px); /* 80px = hauteur navbar */
+    min-height: 100vh; /* Prend toute la hauteur de l'écran */
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-.center-rectangle p {
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    line-height: 1.5;
+/* ----------- Bloc Central (Carte Verre) ----------- */
+.center-rectangle {
+    width: 100%;
+    max-width: 400px; /* Largeur max confortable */
+    padding: 40px;
+    
+    /* Le style Glassmorphism amélioré */
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-top: 1px solid rgba(255, 255, 255, 0.2); /* Reflet haut */
+    
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); /* Ombre profonde */
+    
+    text-align: center;
+    animation: fadeIn 0.8s ease-out;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ----------- Typographie & Contenu ----------- */
 .center-rectangle h2 {
-    font-size: 1.6rem;
-    margin-bottom: 15px;
-    color: #00aaff;
+    font-size: 2rem;
+    margin: 15px 0;
+    background: linear-gradient(to right, #fff, #a5b4fc); /* Dégradé texte */
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
 }
+
 .center-rectangle p {
-    font-size: 1rem;
-    color: #f5f5f5;
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 25px;
 }
 
 /* Image de profil */
 .profile-img {
-    width: 120px;
-    height: 120px;
+    width: 130px;
+    height: 130px;
     object-fit: cover;
     border-radius: 50%;
-    margin-bottom: 20px;
-    border: 3px solid #00aaff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    margin-bottom: 15px;
+    
+    /* Bordure et effet "Glow" */
+    border: 3px solid var(--primary);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+    transition: transform 0.3s ease;
+}
+
+.profile-img:hover {
+    transform: scale(1.05); /* Zoom léger au survol */
 }
 
 /* ----------- Liens ----------- */
-.links a {
-    display: inline;
-    margin: 0 10px;
-    padding: 0;
-    background: none;       /* supprime le fond */
-    color: #00aaff;         /* couleur de texte */
-    text-decoration: none; /* ou none si tu veux juste du texte */
-    font-weight: bold;
+/* Je suppose que c'est pour ta nav à l'intérieur de la carte */
+.links {
+    margin-bottom: 25px;
 }
 
-.redict {
-    text-decoration: none;  
-    color: #00aaff;        
-    font-weight: bold;      
+.links a, .redict {
+    display: inline-block;
+    margin: 0 8px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+    position: relative;
+}
+
+/* Petit effet de soulignement animé */
+.links a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: width 0.3s;
+}
+
+.links a:hover::after {
+    width: 100%;
+}
+
+.links a:hover {
+    color: var(--primary);
+}
+
+/* ----------- Bouton Télécharger ----------- */
+.btn-download {
+    display: inline-block;
+    padding: 14px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    
+    /* Dégradé moderne */
+    background: linear-gradient(135deg, var(--primary) 0%, #4338ca 100%);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50px; /* Forme pilule */
+    text-decoration: none;
+    
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); /* Glow */
+    transition: all 0.3s ease;
+}
+
+.btn-download:hover {
+    transform: translateY(-3px); /* Monte un peu */
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.6); /* Glow plus fort */
+    filter: brightness(1.1);
 }
 
 /* ----------- Responsive ----------- */
-
 @media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .navbar ul {
-        flex-direction: column;
-        align-items: center;
-    }
-
+    /* Ajustement de la carte sur mobile */
     .center-rectangle {
         width: 90%;
-        margin: 50px auto;
+        padding: 30px 20px;
+        margin-top: 60px; /* Espace pour le header si nécessaire */
     }
-}
 
-/*---------------------------Bouton---------------------------*/
-.btn-download {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 12px 30px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #00aaff;
-    background: rgba(255, 255, 255, 0.1);  /* fond semi-transparent */
-    border: 2px solid #00aaff;
-    border-radius: 12px;
-    text-decoration: none;
-    backdrop-filter: blur(6px);  /* effet verre */
-    box-shadow: 0 0 10px rgba(0,170,255,0.5), 0 0 20px rgba(0,170,255,0.3);
+    .center-rectangle h2 {
+        font-size: 1.6rem;
+    }
+    
+    /* Si tu as une navbar ailleurs, assure-toi qu'elle ne gêne pas */
+    .navbar {
+        flex-direction: column;
+    }
 }
