@@ -7,9 +7,10 @@ export default async function handler(req, res) {
     const { name, email, message } = req.body;
 
  const data = {
-    service_id: process.env.EMAILJS_SERVICE_ID,
-    template_id: process.env.EMAILJS_TEMPLATE_ID,
-    public_key: process.env.EMAILJS_PUBLIC_KEY,
+        service_id: "service_ugl1bfb",
+        template_id: "template_xq98p7r",
+        public_key: "ygJUBXwpM2gPIFzQQ",
+
     private_key: process.env.EMAILJS_PRIVATE_KEY,
     template_params: {
         name,
