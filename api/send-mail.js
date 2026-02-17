@@ -7,33 +7,37 @@ export default async function handler(req, res) {
         const { name, email, message, captchaToken } = req.body;
 
         if (!name || !email || !message || !captchaToken) {
-            return res.status(400).json({ message: "Tous les champs sont requis, incluant le captcha." });
+            return res.status(400).json({ message: "Champs manquants." });
         }
 
-        // 1. Vérification du token auprès de Google
-        // Note: Utilise process.env.RECAPTCHA_SECRET_KEY sur Vercel pour plus de sécurité
-        const secretKey = "6Lct424sAAAAAP8nzvda79XDomKZtF82xctQL8K3"; 
-        const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captchaToken}`;
+        // --- CORRECTION ICI : Format spécifique pour Google ---
+        const params = new URLSearchParams();
+        params.append('secret', '6Lct424sAAAAAP8nzvda79XDomKZtF82xctQL8K3');
+        params.append('response', captchaToken);
 
-        const googleVerifyRes = await fetch(verifyUrl, { method: "POST" });
+        const googleVerifyRes = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+            method: "POST",
+            body: params // Envoi en format URL encoded
+        });
+
         const googleData = await googleVerifyRes.json();
 
         if (!googleData.success) {
+            console.error("Détails erreur Google:", googleData["error-codes"]);
             return res.status(400).json({ message: "Échec de la vérification bot." });
         }
 
-        // 2. Préparation des données pour EmailJS
+        // 2. Si Google valide, on envoie à EmailJS
         const emailjsData = {
             service_id: "service_ugl1bfb",
             template_id: "template_xq98p7r",
-            user_id: "ygJUBXwpM2gPIFzQQ", // PUBLIC KEY
-            accessToken: process.env.EMAILJS_PRIVATE_KEY, // Assure-toi que cette variable est sur Vercel
+            user_id: "ygJUBXwpM2gPIFzQQ",
+            accessToken: process.env.EMAILJS_PRIVATE_KEY,
             template_params: {
                 name,
                 email,
                 message,
-                title: "Portfolio Contact",
-                'g-recaptcha-response': captchaToken // Optionnel mais recommandé pour EmailJS
+                title: "Portfolio Contact"
             }
         };
 
@@ -44,15 +48,13 @@ export default async function handler(req, res) {
         });
 
         if (emailjsResponse.ok) {
-            return res.status(200).json({ message: "Email envoyé avec succès !" });
+            return res.status(200).json({ message: "Email envoyé !" });
         } else {
-            const errorText = await emailjsResponse.text();
-            console.error("ERREUR EMAILJS:", errorText);
-            return res.status(500).json({ message: "Erreur EmailJS lors de l'envoi." });
+            return res.status(500).json({ message: "Erreur EmailJS." });
         }
 
     } catch (error) {
-        console.error("ERREUR SERVEUR:", error);
-        return res.status(500).json({ message: "Erreur serveur interne." });
+        console.error("ERREUR:", error);
+        return res.status(500).json({ message: "Erreur serveur." });
     }
-} 
+}
