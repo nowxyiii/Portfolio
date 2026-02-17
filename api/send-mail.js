@@ -11,6 +11,10 @@ export default async function handler(req, res) {
             return res.status(400).json({ message: "Champs manquants" });
         }
 
+        // DEBUG temporaire
+        console.log("Token reçu:", captchaToken?.slice(0, 20) + "...");
+        console.log("Secret key prefix:", process.env.RECAPTCHA_SECRET_KEY?.slice(0, 10) + "...");
+
         // 1. Vérification avec Google
         const verifyUrl = "https://www.google.com/recaptcha/api/siteverify";
         const secretKey = process.env.RECAPTCHA_SECRET_KEY;
@@ -22,6 +26,7 @@ export default async function handler(req, res) {
         });
 
         const googleData = await googleResponse.json();
+        console.log("Google response:", JSON.stringify(googleData));
 
         if (!googleData.success) {
             console.error("Google Reject:", googleData);
