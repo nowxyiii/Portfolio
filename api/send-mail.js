@@ -38,7 +38,7 @@ export default async function handler(req, res) {
             body: JSON.stringify({
                 service_id: "service_ugl1bfb",
                 template_id: "template_xq98p7r",
-                publicKey: "ygJUBXwpM2gPIFzQQ",
+                user_id: "4PhUYs4uuntp8NH0J",
                 accessToken: process.env.EMAILJS_PRIVATE_KEY,
                 template_params: { name, email, message }
             })
