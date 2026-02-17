@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     const data = {
         service_id: process.env.EMAILJS_SERVICE_ID,
         template_id: process.env.EMAILJS_TEMPLATE_ID,
-        user_id: process.env.EMAILJS_USER_ID,
+       public_key: process.env.EMAILJS_PUBLIC_KEY,
         accessToken: process.env.EMAILJS_PRIVATE_KEY,
         template_params: {
             // CORRECTION ICI : On utilise les noms exacts de ton image EmailJS
