@@ -8,13 +8,11 @@
     <link rel="stylesheet" href="css/contact.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/mobile.css">
- 
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 
-                <!-- Navbar -->
     <div id="header"></div>       
-
 
     <div class="container">
         <span class="badge">Contact</span>
@@ -34,6 +32,9 @@
                 <label for="message">Ton Message</label>
                 <textarea id="message" required placeholder="...."></textarea>
             </div>
+
+            <div class="g-recaptcha" data-sitekey="6Lct424sAAAAAFRQuuubJsAHQ4WOuxDyMJaKnCIO" style="margin-bottom: 20px;"></div>
+
             <button type="submit" class="btn-submit">Envoyer le message 🚀</button>
         </form>
 
@@ -52,14 +53,23 @@
             const feedback = document.getElementById('feedback');
             const originalBtnText = btn.innerText;
             
+            // 1. Vérifier si le captcha est rempli
+            const captchaToken = grecaptcha.getResponse();
+            if (!captchaToken) {
+                feedback.innerText = "Veuillez cocher la case 'Je ne suis pas un robot'.";
+                feedback.style.color = "#f87171";
+                return;
+            }
+
             btn.innerText = "Envoi en cours...";
             btn.disabled = true;
-            feedback.innerText = ""; // Reset feedback
+            feedback.innerText = ""; 
             
             const formData = {
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
-                message: document.getElementById('message').value
+                message: document.getElementById('message').value,
+                captchaToken: captchaToken // On envoie le token au backend
             };
 
             try {
@@ -69,16 +79,21 @@
                     body: JSON.stringify(formData)
                 });
 
+                const result = await response.json();
+
                 if (response.ok) {
                     feedback.innerText = "Message envoyé avec succès ! Merci 🚀";
                     feedback.style.color = "#4ade80";
                     this.reset();
+                    grecaptcha.reset(); // Réinitialise le captcha
                 } else {
-                    throw new Error('Erreur API');
+                    throw new Error(result.message || 'Erreur API');
                 }
             } catch (error) {
                 console.error(error);
-                feedback.innerText = "Oups, une erreur est survenue. Réessaie plus tard.";
+                feedback.innerText = error.message === "Échec de la vérification bot." 
+                    ? "Vérification bot échouée. Réessaie." 
+                    : "Oups, une erreur est survenue. Réessaie plus tard.";
                 feedback.style.color = "#f87171";
             } finally {
                 btn.innerText = originalBtnText;
